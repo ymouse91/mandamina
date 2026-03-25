@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1533" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon192.png">
+  <link rel="apple-touch-icon" href="icon192.png">
+  <title>Mandamina</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="topbar">
+      <div class="titleWrap">
+        <div class="title">Mandamina</div>
+        <div class="subtitle">Hiljainen yhteistyöpeli</div>
+      </div>
+      <div class="controls">
+        <label class="compact">
+          Pelaajia
+          <select id="playerCount">
+            <option value="1"selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </label>
+
+        <label class="compact">
+          Pisteytys
+          <select id="difficulty">
+            <option value="easy">helppo</option>
+            <option value="normal" selected>normaali</option>
+            <option value="hard">vaikea</option>
+          </select>
+        </label>
+
+        <button id="btnNew">Uusi peli</button>
+        <button id="btnUndo">Peru</button>
+        <button id="btnCheck">Ratkaistu?</button>
+      </div>
+    </header>
+
+    <section id="statusPanel">
+      <div class="pill"><span class="label">Siirrot</span><span id="moveLabel">0</span></div>
+      <div class="pill"><span class="label">Tyhjä keskellä</span><span id="centerLabel">Kyllä</span></div>
+      <div class="pill"><span class="label">Muotoja</span><span id="shapeLabel">–</span></div>
+      <div class="pill"><span class="label">Pisteet</span><span id="scoreLabel">–</span></div>
+	  <div class="pill"><span class="label">Pelaaja</span><span id="playerLabel">1 / 2</span></div>
+    </section>
+
+    <main id="main">
+      <div id="boardWrap">
+        <div id="board" aria-label="Mandamina pelilauta"></div>
+      </div>
+
+      <aside id="sidePanel">
+        <div class="card">
+          <div class="cardTitle">Ohje</div>
+          <div class="cardBody">
+            Siirrä vuorollasi mikä tahansa kuula tyhjään kohtaan.
+            Tavoitteena on saada kaikki samanväriset kuulat yhtenäisiksi
+            ortogonaalisiksi ryhmiksi ilman puhetta.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardTitle">Pisteytys</div>
+          <div class="cardBody">
+            Eri ryhmämuodot × vaikeustasoarvo + keskikolo 5 p − siirrot.
+            Helppo 6 p / muoto, normaali 5 p / muoto, vaikea 4 p / muoto.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardTitle">Tila</div>
+          <div class="cardBody" id="messageBox">
+            Aloita uusi peli. Alkuasetelma luodaan niin, ettei samanvärisiä
+            kuulia ole vaaka- tai pystysuunnassa vierekkäin.
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

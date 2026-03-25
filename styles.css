@@ -1,0 +1,556 @@
+:root{
+  --bg:#0b1533;
+  --panel:#13214b;
+  --panel2:#0f1c41;
+  --ink:#eef4ff;
+  --muted:#a9b8e8;
+  --line:#2a3d77;
+  --good:#44d39a;
+  --warn:#ffd35a;
+  --bad:#ff7587;
+  --shadow:0 10px 28px rgba(0,0,0,.28);
+  --sideW:300px;
+  --gap:12px;
+  --boardInset:8px;
+}
+
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Arial, Helvetica, sans-serif;
+  overflow:hidden;
+}
+
+body{
+  -webkit-user-select:none;
+  user-select:none;
+  touch-action:manipulation;
+}
+
+button,
+select{
+  font:inherit;
+}
+
+/* Tavalliset UI-napit, ei laudan solut */
+button:not(.cell){
+  border:none;
+  border-radius:999px;
+  padding:10px 14px;
+  background:#1f3270;
+  color:var(--ink);
+  cursor:pointer;
+  box-shadow:var(--shadow);
+}
+
+button:not(.cell):active{
+  transform:translateY(1px);
+}
+
+#btnCheck{ background:#25539f; }
+#btnUndo{ background:#32407b; }
+#btnNew{
+  background:#d98c00;
+  color:#1c1400;
+  font-weight:700;
+}
+
+#app{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:
+    env(safe-area-inset-top)
+    max(10px, env(safe-area-inset-right))
+    env(safe-area-inset-bottom)
+    max(10px, env(safe-area-inset-left));
+}
+
+#topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:72px;
+  padding:10px 12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+}
+
+.titleWrap{
+  min-width:0;
+}
+
+.title{
+  font-size:28px;
+  font-weight:800;
+  line-height:1;
+}
+
+.subtitle{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.compact{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 10px;
+  color:var(--muted);
+  background:var(--panel2);
+  border:1px solid var(--line);
+  border-radius:999px;
+}
+
+select{
+  background:transparent;
+  color:var(--ink);
+  border:none;
+  outline:none;
+}
+
+#statusPanel{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0,1fr));
+  gap:10px;
+}
+
+.pill{
+  min-height:58px;
+  padding:10px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+
+.label{
+  font-size:12px;
+  color:var(--muted);
+}
+
+#main{
+  flex:1;
+  min-width:0;
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) var(--sideW);
+  gap:var(--gap);
+}
+
+#boardWrap{
+  min-width:0;
+  min-height:0;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  padding:var(--boardInset);
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+}
+
+/* Desktop: lauta käyttää saatavilla olevaa leveyttä,
+   mutta ei kasva korkeussuunnassa liian isoksi */
+#board{
+  width:min(100%, calc(100vh - 230px));
+  max-width:100%;
+  max-height:100%;
+  aspect-ratio:1 / 1;
+
+  display:grid;
+  grid-template-columns:repeat(7, minmax(0, 1fr));
+  grid-template-rows:repeat(7, minmax(0, 1fr));
+  gap:6px;
+  padding:6px;
+}
+
+/* Lautasolut aina neliöiksi */
+button.cell{
+  all:unset;
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  aspect-ratio:1 / 1;
+  min-width:0;
+  min-height:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#111826;
+  border-radius:16%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+  cursor:pointer;
+}
+
+.cell.empty{
+  background:#162959;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.12);
+}
+
+.cell.clickable{
+  outline:2px solid rgba(255,255,255,.08);
+}
+
+.marble{
+  width:66%;
+  height:66%;
+  min-width:0;
+  min-height:0;
+  border-radius:50%;
+  flex:0 0 auto;
+  box-shadow:
+    inset -10px -12px 22px rgba(0,0,0,.22),
+    inset 10px 10px 18px rgba(255,255,255,.35),
+    0 8px 12px rgba(0,0,0,.28);
+}
+
+#sidePanel{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.card{
+  padding:12px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+
+.cardTitle{
+  margin-bottom:8px;
+  font-weight:800;
+}
+
+.cardBody{
+  font-size:15px;
+  line-height:1.45;
+  color:var(--ink);
+}
+
+.win{ color:var(--good); }
+.warn{ color:var(--warn); }
+
+/* Kapeampi desktop / pienet läppärit */
+@media (max-width: 1180px){
+  :root{
+    --sideW:260px;
+    --gap:10px;
+    --boardInset:6px;
+  }
+
+  #board{
+    width:min(100%, calc(100vh - 220px));
+    gap:5px;
+    padding:5px;
+  }
+}
+
+/* Tablet yleisesti: sidePanel pois */
+@media (max-width: 980px){
+  #main{
+    grid-template-columns:1fr;
+  }
+
+  #sidePanel{
+    display:none;
+  }
+
+  #statusPanel{
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:8px;
+  }
+
+  .pill{
+    min-height:auto;
+    padding:8px 10px;
+  }
+}
+
+/* iPad / tablet landscape:
+   lauta mitoitetaan korkeuden mukaan */
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape){
+  #app{
+    gap:8px;
+    padding:
+      env(safe-area-inset-top)
+      max(8px, env(safe-area-inset-right))
+      env(safe-area-inset-bottom)
+      max(8px, env(safe-area-inset-left));
+  }
+
+  #topbar{
+    min-height:unset;
+    padding:8px 10px;
+    gap:8px;
+  }
+
+  .title{
+    font-size:22px;
+  }
+
+  .subtitle{
+    font-size:12px;
+  }
+
+  .controls{
+    gap:6px;
+  }
+
+  .compact{
+    padding:7px 8px;
+    font-size:13px;
+  }
+
+  button:not(.cell){
+    padding:9px 11px;
+    font-size:14px;
+  }
+
+  #statusPanel{
+    grid-template-columns:repeat(5, minmax(0,1fr));
+    gap:8px;
+  }
+
+  /* Pidetään sidepanel oikealla */
+  #main{
+    grid-template-columns:minmax(0,1fr) 260px;
+    grid-template-rows:none;
+    gap:8px;
+  }
+
+  #sidePanel{
+    display:flex;
+    min-width:0;
+    min-height:0;
+  }
+
+  #boardWrap{
+    padding:6px;
+    min-width:0;
+    min-height:0;
+  }
+
+  /* iPad vaakana lauta mitoitetaan korkeuden mukaan */
+#board{
+  width:auto;
+  height:calc(100% - 24px);
+  max-width:100%;
+  max-height:100%;
+  aspect-ratio:1 / 1;
+  gap:4px;
+  padding:4px;
+}
+
+  .marble{
+    width:64%;
+    height:64%;
+  }
+}
+
+/* Pystytabletti / puhelin:
+   lauta mitoitetaan leveyden mukaan */
+@media (max-width: 560px) and (orientation: portrait){
+
+  #app{
+    gap:6px;
+    padding:
+      env(safe-area-inset-top)
+      max(6px, env(safe-area-inset-right))
+      env(safe-area-inset-bottom)
+      max(6px, env(safe-area-inset-left));
+  }
+
+  #topbar{
+    min-height:unset;
+    padding:6px 8px;
+    gap:6px;
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .titleWrap{
+    text-align:center;
+  }
+
+  .title{
+    font-size:18px;
+  }
+
+  .subtitle{
+    margin-top:2px;
+    font-size:11px;
+  }
+
+  .controls{
+    gap:5px;
+    justify-content:flex-start;
+  }
+
+  .compact{
+    padding:5px 7px;
+    font-size:12px;
+    gap:4px;
+  }
+
+  button:not(.cell){
+    padding:7px 9px;
+    font-size:13px;
+  }
+
+  #statusPanel{
+    grid-template-columns:repeat(5, minmax(0,1fr));
+    gap:4px;
+  }
+
+  .pill{
+    min-height:auto;
+    padding:5px 6px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:4px;
+  }
+
+  .label{
+    font-size:10px;
+    line-height:1.1;
+  }
+
+  .pill span:last-child{
+    font-size:11px;
+    line-height:1.1;
+    font-weight:600;
+  }
+
+  #main{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+
+  #sidePanel{
+    display:none;
+  }
+
+  #boardWrap{
+    min-width:0;
+    min-height:0;
+    padding:4px;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+  }
+
+  /* Tärkeä: lauta mahtuu varmasti boardWrapin sisään */
+  #board{
+    width:100%;
+    height:auto;
+    max-width:100%;
+    max-height:100%;
+    aspect-ratio:1 / 1;
+
+    display:grid;
+    grid-template-columns:repeat(7, minmax(0,1fr));
+    grid-template-rows:repeat(7, minmax(0,1fr));
+
+    gap:2px;
+    padding:2px;
+  }
+
+  button.cell{
+    width:100%;
+    height:100%;
+    min-width:0;
+    min-height:0;
+    aspect-ratio:1 / 1;
+  }
+
+  .marble{
+    width:62%;
+    height:62%;
+  }
+  @media (max-width: 560px) and (orientation: portrait){
+
+  /* 2 riviä: 3 + 2 */
+  #statusPanel{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0,1fr));
+    gap:4px;
+  }
+
+  /* piilotetaan 3. kortti = "Tyhjä keskellä" */
+  #statusPanel .pill:nth-child(3){
+    display:none;
+  }
+
+  /* kompaktit kortit */
+  .pill{
+    min-height:auto;
+    padding:5px 6px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:2px;
+  }
+
+  .label{
+    font-size:10px;
+    line-height:1;
+  }
+
+  .pill span:last-child{
+    font-size:11px;
+    font-weight:600;
+    line-height:1;
+  }
+}
+}
+
+/* Pienet puhelimet */
+@media (max-width: 560px){
+  #topbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .controls{
+    justify-content:flex-start;
+  }
+
+  .titleWrap{
+    text-align:center;
+  }
+}

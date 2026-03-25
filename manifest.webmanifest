@@ -1,0 +1,9 @@
+{
+  "name": "Mandamina",
+  "short_name": "Mandamina",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1533",
+  "theme_color": "#0b1533",
+  "icons": []
+}
