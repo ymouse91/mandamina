@@ -4,7 +4,9 @@ const ASSETS = [
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./manifest.webmanifest"
+  "./manifest.webmanifest",
+  "./icon192.png"
+ 
 ];
 
 self.addEventListener("install", (event) => {
